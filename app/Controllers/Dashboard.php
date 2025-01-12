@@ -17,7 +17,9 @@ class Dashboard extends BaseController
     $data = [
         'donasi_terbaru' => $this->donaturModel->getDonaturTerbaru(),
         'total_donasi' => $this->donaturModel->getTotalDonasi(),
-        'total_donatur' => $this->donaturModel->getTotalDonatur()
+        'total_donatur' => $this->donaturModel->getTotalDonatur(),
+        'total_program' => $this->programModel->getTotalProgramAktif(),
+        'total_penyaluran' => $this->programModel->getTotalPenyaluran()
     ];
 
     echo view('header_view');

@@ -39,30 +39,34 @@
                 </div>
 
                 <!-- Program Aktif Card -->
-                <div class="bg-white rounded-lg shadow p-4 lg:p-6">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-yellow-500 bg-opacity-75">
-                            <i class="fas fa-chart-line text-white text-xl lg:text-2xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h2 class="text-gray-600 text-sm">Program Aktif</h2>
-                            <p class="text-lg lg:text-2xl font-semibold text-gray-800">12</p>
+                    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-yellow-500 bg-opacity-75">
+                                <i class="fas fa-chart-line text-white text-xl lg:text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h2 class="text-gray-600 text-sm">Program Aktif</h2>
+                                <p class="text-lg lg:text-2xl font-semibold text-gray-800">
+                                    <?= number_format($total_program, 0, ',', '.') ?>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Penyaluran Card -->
-                <div class="bg-white rounded-lg shadow p-4 lg:p-6">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-red-500 bg-opacity-75">
-                            <i class="fas fa-hand-holding-heart text-white text-xl lg:text-2xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h2 class="text-gray-600 text-sm">Total Penyaluran</h2>
-                            <p class="text-lg lg:text-2xl font-semibold text-gray-800">Rp 3.500.000</p>
+                    <!-- Penyaluran Card -->
+                    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-red-500 bg-opacity-75">
+                                <i class="fas fa-hand-holding-heart text-white text-xl lg:text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h2 class="text-gray-600 text-sm">Total Penyaluran</h2>
+                                <p class="text-lg lg:text-2xl font-semibold text-gray-800">
+                                    Rp <?= number_format($total_penyaluran, 0, ',', '.') ?>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
             </div>
 
             <!-- Recent Donations Table -->
