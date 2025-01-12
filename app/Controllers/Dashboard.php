@@ -13,38 +13,42 @@ class Dashboard extends BaseController
     }
 
     public function index()
-    {
-        $data['donasi_terbaru'] = $this->donaturModel->getDonaturTerbaru();
-        
-        echo view('header_view');
-        echo view('sidebar_view');
-        echo view('dashboard_view', $data);
-        echo view('footer_view');
-    }
-
-    public function program()
 {
-    // Update total terkumpul untuk semua program
-    $programs = $this->programModel->findAll();
-    foreach ($programs as $program) {
-        $this->donaturModel->updateTotalTerkumpul($program['id_program']);
-    }
-    
-    // Ambil data terbaru
-    $data['programs'] = $this->programModel->getProgram();
-    
+    $data = [
+        'donasi_terbaru' => $this->donaturModel->getDonaturTerbaru(),
+        'total_donasi' => $this->donaturModel->getTotalDonasi(),
+        'total_donatur' => $this->donaturModel->getTotalDonatur()
+    ];
+
     echo view('header_view');
     echo view('sidebar_view');
-    echo view('dns_view', $data);
+    echo view('dashboard_view', $data);
     echo view('footer_view');
 }
+
+    public function program()
+    {
+        // Update total terkumpul untuk semua program
+        $programs = $this->programModel->findAll();
+        foreach ($programs as $program) {
+            $this->donaturModel->updateTotalTerkumpul($program['id_program']);
+        }
+
+        // Ambil data terbaru
+        $data['programs'] = $this->programModel->getProgram();
+
+        echo view('header_view');
+        echo view('sidebar_view');
+        echo view('dns_view', $data);
+        echo view('footer_view');
+    }
     public function tambah_program()
     {
         echo view('header_view');
         echo view('tambah_view');
         echo view('footer_view');
     }
-    
+
     public function add_program()
     {
         $data = [
@@ -54,27 +58,27 @@ class Dashboard extends BaseController
             'terkumpul' => 0, // nilai awal
             'status' => $this->request->getPost('status')
         ];
-        
+
         $this->programModel->saveProgram($data);
-        
+
         return redirect()->to(base_url('dashboard/program'))
-                        ->with('success', 'Program berhasil ditambahkan');
+            ->with('success', 'Program berhasil ditambahkan');
     }
-    
+
     public function hapus_program($id)
     {
         $program = $this->programModel->find($id);
-        
-        if($program) {
+
+        if ($program) {
             $this->programModel->hapusProgram($id);
             return redirect()->to(base_url('dashboard/program'))
-                           ->with('success', 'Program berhasil dihapus');
+                ->with('success', 'Program berhasil dihapus');
         }
-        
+
         return redirect()->to(base_url('dashboard/program'))
-                        ->with('error', 'Program tidak ditemukan');
+            ->with('error', 'Program tidak ditemukan');
     }
-// Tambahkan fungsi-fungsi baru untuk donatur
+    // Tambahkan fungsi-fungsi baru untuk donatur
     public function tambah_donasi()
     {
         echo view('header_view');
@@ -94,7 +98,7 @@ class Dashboard extends BaseController
 
         // Simpan donasi
         $this->donaturModel->insert($data);
-        
+
         // Update total terkumpul
         $this->donaturModel->updateTotalTerkumpul($data['id_program']);
 
@@ -107,13 +111,13 @@ class Dashboard extends BaseController
         $donasi = $this->donaturModel->find($id);
         if ($donasi) {
             $id_program = $donasi['id_program'];
-            
+
             // Hapus donasi
             $this->donaturModel->delete($id);
-            
+
             // Update total terkumpul
             $this->donaturModel->updateTotalTerkumpul($id_program);
-            
+
             return redirect()->to(base_url('dashboard'))
                 ->with('success', 'Donasi berhasil dihapus');
         }
@@ -131,4 +135,38 @@ class Dashboard extends BaseController
         return redirect()->to(base_url('dashboard/program'))
             ->with('success', 'Semua total berhasil diupdate');
     }
+
+    public function view_donasi($id)
+{
+    $data['donasi'] = $this->donaturModel->getDonasiDetail($id);
+    
+    if (empty($data['donasi'])) {
+        return redirect()->to(base_url('dashboard'))
+            ->with('error', 'Donasi tidak ditemukan');
+    }
+
+    echo view('header_view');
+    echo view('donasidetail_view', $data);  // You'll need to create this view
+    echo view('footer_view');
+}
+
+public function update_status_donasi()
+{
+    $id = $this->request->getPost('no_donasi');
+    $status = $this->request->getPost('status');
+    
+    $success = $this->donaturModel->update($id, ['status' => $status]);
+    
+    if ($success) {
+        // Update total terkumpul after status change
+        $donasi = $this->donaturModel->find($id);
+        $this->donaturModel->updateTotalTerkumpul($donasi['id_program']);
+        
+        return redirect()->to(base_url('dashboard/donasi/view/' . $id))
+            ->with('success', 'Status donasi berhasil diupdate');
+    }
+    
+    return redirect()->to(base_url('dashboard/donasi/view/' . $id))
+        ->with('error', 'Gagal mengupdate status donasi');
+}
 }
