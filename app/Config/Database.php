@@ -26,9 +26,9 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'mysql-4177310-klawcodes-a7ad.k.aivencloud.com',
-        'username'     => 'avnadmin',
-        'password'     => 'AVNS_tISk9HY6HSp_0tR_uCv',
+        'hostname'     => 'localhost',
+        'username'     => 'root',
+        'password'     => '',
         'database'     => 'sisd',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
