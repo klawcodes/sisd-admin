@@ -150,6 +150,43 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="p-4 border-t border-gray-200">
+        <?php
+        $total_pages = ceil($pager['total_records'] / $pager['per_page']);
+        $current_page = $pager['current_page'];
+        ?>
+        
+        <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-500">
+                Showing <?= (($current_page - 1) * 5) + 1 ?> to 
+                <?= min($current_page * 5, $pager['total_records']) ?> of 
+                <?= $pager['total_records'] ?> entries
+            </div>
+            
+            <div class="flex space-x-1">
+                <?php if ($current_page > 1): ?>
+                    <a href="<?= base_url('dashboard?page=' . ($current_page - 1)) ?>"
+                       class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                        Previous
+                    </a>
+                <?php endif; ?>
+                
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="<?= base_url('dashboard?page=' . $i) ?>"
+                       class="px-3 py-1 text-sm <?= $i == $current_page ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?> rounded-md">
+                        <?= $i ?>
+                    </a>
+                <?php endfor; ?>
+                
+                <?php if ($current_page < $total_pages): ?>
+                    <a href="<?= base_url('dashboard?page=' . ($current_page + 1)) ?>"
+                       class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                        Next
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
             </div>
         </div>
     </div>

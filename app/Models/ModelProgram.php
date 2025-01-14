@@ -27,16 +27,25 @@ class ModelProgram extends Model
     // Method baru untuk menghitung total program aktif
     public function getTotalProgramAktif()
     {
-        return $this->builder()
-                    ->countAll();
+        return $this->where('status', 1)
+            ->countAllResults();
+    }
+
+    public function getProgramSelesai()
+    {
+        return $this->where('status', 0)->findAll();
     }
 
     // Method baru untuk menghitung total target penyaluran
     public function getTotalPenyaluran()
     {
         return $this->selectSum('target', 'total')
-                    ->get()
-                    ->getRow()
-                    ->total ?? 0;
+            ->get()
+            ->getRow()
+            ->total ?? 0;
+    }
+    public function updateStatus($id)
+    {
+        return $this->update($id, ['status' => 0]);
     }
 }

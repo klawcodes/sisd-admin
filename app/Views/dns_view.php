@@ -26,7 +26,7 @@
             // Hitung persentase
             $percentage = ($program['terkumpul'] / $program['target']) * 100;
             $percentage = min(100, $percentage);
-            
+
             // Tentukan warna progress bar
             $progressColor = 'bg-blue-500';
             if ($percentage >= 100) {
@@ -76,15 +76,24 @@
                             <span class="font-semibold text-gray-800">Rp
                                 <?= number_format($program['terkumpul'], 0, ',', '.') ?></span>
                         </div>
-                        <div class="flex justify-end">
-                            <span class="px-3 py-1 <?= $program['status'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?> text-sm rounded-full">
-                                <?= $program['status'] ? 'Aktif' : 'Nonaktif' ?>
+                        <div class="flex place-content-between">
+                            <?php if ($program['status'] == 1): ?>
+                                <a href="<?= base_url('dashboard/update-program-status/' . $program['id_program']) ?>"
+                                    class="px-3 py-1 bg-blue-900 text-blue-50 text-sm rounded-full hover:bg-blue-200 hover:no-underline hover:text-blue-900 cursor-pointer">
+                                    Selesaikan
+                                </a>
+                            <?php endif; ?>
+                            <span
+                                class="px-3 py-1 <?= $program['status'] ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' ?> text-sm rounded-full">
+                                <?= $program['status'] ? 'Aktif' : 'Selesai' ?>
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
+            
         <?php endforeach; ?>
+        
     </div>
 </div>
 

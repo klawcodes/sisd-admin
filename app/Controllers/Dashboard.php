@@ -13,20 +13,29 @@ class Dashboard extends BaseController
     }
 
     public function index()
-{
-    $data = [
-        'donasi_terbaru' => $this->donaturModel->getDonaturTerbaru(),
-        'total_donasi' => $this->donaturModel->getTotalDonasi(),
-        'total_donatur' => $this->donaturModel->getTotalDonatur(),
-        'total_program' => $this->programModel->getTotalProgramAktif(),
-        'total_penyaluran' => $this->programModel->getTotalPenyaluran()
-    ];
+    {
+        $page = $this->request->getGet('page') ?? 1;
 
-    echo view('header_view');
-    echo view('sidebar_view');
-    echo view('dashboard_view', $data);
-    echo view('footer_view');
-}
+        $donaturModel = new \App\Models\ModelDonatur();
+
+        $data = [
+            'donasi_terbaru' => $donaturModel->getDonaturTerbaru($page),
+            'total_donasi' => $donaturModel->getTotalDonasi(),
+            'total_donatur' => $donaturModel->getTotalDonatur(),
+            'total_program' => $this->programModel->getTotalProgramAktif(),
+            'total_penyaluran' => $this->programModel->getTotalPenyaluran(),
+            'pager' => [
+                'total_records' => $donaturModel->countAllDonasi(),
+                'per_page' => 5,
+                'current_page' => $page
+            ]
+        ];
+
+        echo view('header_view');
+        echo view('sidebar_view');
+        echo view('dashboard_view', $data);
+        echo view('footer_view');
+    }
 
     public function program()
     {
@@ -88,6 +97,16 @@ class Dashboard extends BaseController
         echo view('footer_view');
     }
 
+    public function laporan()
+    {
+        $data['programs'] = $this->programModel->getProgramSelesai();
+
+        echo view('header_view');
+        echo view('sidebar_view');
+        echo view('laporan_view', $data);
+        echo view('footer_view');
+    }
+
     public function add_donasi()
     {
         $data = [
@@ -139,36 +158,49 @@ class Dashboard extends BaseController
     }
 
     public function view_donasi($id)
-{
-    $data['donasi'] = $this->donaturModel->getDonasiDetail($id);
-    
-    if (empty($data['donasi'])) {
-        return redirect()->to(base_url('dashboard'))
-            ->with('error', 'Donasi tidak ditemukan');
+    {
+        $data['donasi'] = $this->donaturModel->getDonasiDetail($id);
+
+        if (empty($data['donasi'])) {
+            return redirect()->to(base_url('dashboard'))
+                ->with('error', 'Donasi tidak ditemukan');
+        }
+
+        echo view('header_view');
+        echo view('donasidetail_view', $data);  // You'll need to create this view
+        echo view('footer_view');
     }
 
-    echo view('header_view');
-    echo view('donasidetail_view', $data);  // You'll need to create this view
-    echo view('footer_view');
-}
+    public function update_status_donasi()
+    {
+        $id = $this->request->getPost('no_donasi');
+        $status = $this->request->getPost('status');
 
-public function update_status_donasi()
-{
-    $id = $this->request->getPost('no_donasi');
-    $status = $this->request->getPost('status');
-    
-    $success = $this->donaturModel->update($id, ['status' => $status]);
-    
-    if ($success) {
-        // Update total terkumpul after status change
-        $donasi = $this->donaturModel->find($id);
-        $this->donaturModel->updateTotalTerkumpul($donasi['id_program']);
-        
+        $success = $this->donaturModel->update($id, ['status' => $status]);
+
+        if ($success) {
+            // Update total terkumpul after status change
+            $donasi = $this->donaturModel->find($id);
+            $this->donaturModel->updateTotalTerkumpul($donasi['id_program']);
+
+            return redirect()->to(base_url('dashboard/donasi/view/' . $id))
+                ->with('success', 'Status donasi berhasil diupdate');
+        }
+
         return redirect()->to(base_url('dashboard/donasi/view/' . $id))
-            ->with('success', 'Status donasi berhasil diupdate');
+            ->with('error', 'Gagal mengupdate status donasi');
     }
-    
-    return redirect()->to(base_url('dashboard/donasi/view/' . $id))
-        ->with('error', 'Gagal mengupdate status donasi');
-}
+    public function update_program_status($id)
+    {
+        $program = $this->programModel->find($id);
+
+        if ($program) {
+            $this->programModel->updateStatus($id);
+            return redirect()->to(base_url('/dashboard/program'))
+                ->with('success', 'Status program berhasil diupdate');
+        }
+
+        return redirect()->to(base_url('/dashboard/program'))
+            ->with('error', 'Program tidak ditemukan');
+    }
 }
