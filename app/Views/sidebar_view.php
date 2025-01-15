@@ -11,27 +11,34 @@
   <div class="p-4 border-b border-gray-700">
     <h1 class="text-2xl font-semibold text-center">DonasiKita</h1>
   </div>
-  <nav class="mt-4">
+  <nav class="mt-4 flex flex-col space-y-80">
     <ul class="space-y-2">
       <li>
-        <a href="<?= base_url('/dashboard') ?>" class="flex items-center px-4 py-3 hover:bg-gray-700">
+        <a href="<?= base_url('/dashboard') ?>" class="flex hover:no-underline items-center px-4 py-3 hover:bg-gray-700 hover:text-gray-100">
           <i class="fas fa-tachometer-alt mr-3"></i>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
-        <a href="<?= base_url('/dashboard/program') ?>" class="flex items-center px-4 py-3 hover:bg-gray-700">
+        <a href="<?= base_url('/dashboard/program') ?>" class="flex hover:no-underline items-center px-4 py-3 hover:bg-gray-700 hover:text-gray-100">
           <i class="fas fa-hand-holding-heart mr-3"></i>
           <span>Donasi & Sumbangan</span>
         </a>
       </li>
       <li>
-        <a href="<?= base_url('/dashboard/laporan') ?>" class="flex items-center px-4 py-3 hover:bg-gray-700">
+        <a href="<?= base_url('/dashboard/laporan') ?>" class="flex hover:no-underline items-center px-4 py-3 hover:bg-gray-700 hover:text-gray-100">
           <i class="fas fa-file-alt mr-3"></i>
           <span>Laporan</span>
         </a>
       </li>
     </ul>
+    <div class="flex justify-center mt-8 ">
+    <?php if (logged_in()): ?>
+      <a href="/logout" class="px-2 inline-flex leading-5 font-semibold rounded-full text-gray-100 hover:text-gray-500 hover:no-underline text-center items-center justify-center"><i class="fa-solid fa-right-from-bracket me-1"></i> Logout</a>
+    <?php else: ?>
+      <a href="/login" class="px-2 inline-flex leading-5 font-semibold rounded-full text-gray-100 hover:text-gray-500 hover:no-underline text-center items-center justify-center"><i class="fa-solid fa-right-to-bracket me-1"></i> Login</a>
+    <?php endif; ?>
+    </div>
   </nav>
 </div>
 
@@ -40,94 +47,94 @@
 
 <!-- Script untuk toggle sidebar -->
 <script>
-// Store sidebar state in localStorage
-const SIDEBAR_STATE_KEY = 'sidebarCollapsed';
+  // Store sidebar state in localStorage
+  const SIDEBAR_STATE_KEY = 'sidebarCollapsed';
 
-// Function to handle sidebar toggle
-function toggleSidebar(isMobile = false) {
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('sidebarOverlay');
-  const mainContent = document.getElementById('mainContent');
+  // Function to handle sidebar toggle
+  function toggleSidebar(isMobile = false) {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const mainContent = document.getElementById('mainContent');
 
-  // Get current state
-  const isCollapsed = sidebar.classList.contains('-translate-x-full');
+    // Get current state
+    const isCollapsed = sidebar.classList.contains('-translate-x-full');
 
-  if (isCollapsed) {
-    // Buka sidebar
-    sidebar.classList.remove('-translate-x-full');
-    if (isMobile) {
-      overlay.classList.remove('hidden');
-    } else {
-      // For desktop: adjust main content
-      if (mainContent) {
-        mainContent.classList.remove('lg:ml-0');
-        mainContent.classList.add('lg:ml-64');
+    if (isCollapsed) {
+      // Buka sidebar
+      sidebar.classList.remove('-translate-x-full');
+      if (isMobile) {
+        overlay.classList.remove('hidden');
+      } else {
+        // For desktop: adjust main content
+        if (mainContent) {
+          mainContent.classList.remove('lg:ml-0');
+          mainContent.classList.add('lg:ml-64');
+        }
+        localStorage.setItem(SIDEBAR_STATE_KEY, 'open');
       }
-      localStorage.setItem(SIDEBAR_STATE_KEY, 'open');
-    }
-  } else {
-    // Tutup sidebar
-    sidebar.classList.add('-translate-x-full');
-    if (isMobile) {
-      overlay.classList.add('hidden');
     } else {
-      // For desktop: adjust main content
+      // Tutup sidebar
+      sidebar.classList.add('-translate-x-full');
+      if (isMobile) {
+        overlay.classList.add('hidden');
+      } else {
+        // For desktop: adjust main content
+        if (mainContent) {
+          mainContent.classList.remove('lg:ml-64');
+          mainContent.classList.add('lg:ml-0');
+        }
+        localStorage.setItem(SIDEBAR_STATE_KEY, 'closed');
+      }
+    }
+  }
+
+  // Mobile toggle
+  document.getElementById('sidebarToggle').addEventListener('click', () => toggleSidebar(true));
+
+  // Desktop toggle - Make sure this runs after DOM is loaded
+  document.getElementById('desktopSidebarToggle').addEventListener('click', () => toggleSidebar(false));
+
+  // Overlay click handler
+  document.getElementById('sidebarOverlay').addEventListener('click', () => toggleSidebar(true));
+
+  // Initialize sidebar state from localStorage on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    const sidebarState = localStorage.getItem(SIDEBAR_STATE_KEY);
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+
+    // Set initial state based on localStorage
+    if (sidebarState === 'closed') {
+      sidebar.classList.add('-translate-x-full');
       if (mainContent) {
         mainContent.classList.remove('lg:ml-64');
         mainContent.classList.add('lg:ml-0');
       }
-      localStorage.setItem(SIDEBAR_STATE_KEY, 'closed');
+    } else {
+      // Ensure default open state on desktop
+      if (window.innerWidth >= 1024) { // lg breakpoint
+        if (mainContent) {
+          mainContent.classList.add('lg:ml-64');
+          mainContent.classList.remove('lg:ml-0');
+        }
+      }
     }
-  }
-}
+  });
 
-// Mobile toggle
-document.getElementById('sidebarToggle').addEventListener('click', () => toggleSidebar(true));
+  // Add resize handler to manage responsive behavior
+  window.addEventListener('resize', () => {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const sidebarState = localStorage.getItem(SIDEBAR_STATE_KEY);
 
-// Desktop toggle - Make sure this runs after DOM is loaded
-document.getElementById('desktopSidebarToggle').addEventListener('click', () => toggleSidebar(false));
-
-// Overlay click handler
-document.getElementById('sidebarOverlay').addEventListener('click', () => toggleSidebar(true));
-
-// Initialize sidebar state from localStorage on page load
-document.addEventListener('DOMContentLoaded', () => {
-  const sidebarState = localStorage.getItem(SIDEBAR_STATE_KEY);
-  const sidebar = document.getElementById('sidebar');
-  const mainContent = document.getElementById('mainContent');
-
-  // Set initial state based on localStorage
-  if (sidebarState === 'closed') {
-    sidebar.classList.add('-translate-x-full');
-    if (mainContent) {
-      mainContent.classList.remove('lg:ml-64');
-      mainContent.classList.add('lg:ml-0');
-    }
-  } else {
-    // Ensure default open state on desktop
     if (window.innerWidth >= 1024) { // lg breakpoint
-      if (mainContent) {
-        mainContent.classList.add('lg:ml-64');
-        mainContent.classList.remove('lg:ml-0');
+      if (sidebarState !== 'closed') {
+        sidebar.classList.remove('-translate-x-full');
+        if (mainContent) {
+          mainContent.classList.add('lg:ml-64');
+          mainContent.classList.remove('lg:ml-0');
+        }
       }
     }
-  }
-});
-
-// Add resize handler to manage responsive behavior
-window.addEventListener('resize', () => {
-  const sidebar = document.getElementById('sidebar');
-  const mainContent = document.getElementById('mainContent');
-  const sidebarState = localStorage.getItem(SIDEBAR_STATE_KEY);
-
-  if (window.innerWidth >= 1024) { // lg breakpoint
-    if (sidebarState !== 'closed') {
-      sidebar.classList.remove('-translate-x-full');
-      if (mainContent) {
-        mainContent.classList.add('lg:ml-64');
-        mainContent.classList.remove('lg:ml-0');
-      }
-    }
-  }
-});
+  });
 </script>

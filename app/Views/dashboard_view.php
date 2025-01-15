@@ -5,11 +5,18 @@
         <div class="container mx-auto">
             <!-- Welcome Message -->
             <div class="bg-white rounded-lg shadow p-4 lg:p-6 mb-6 flex justify-between items-center">
-                <h1 class="text-2xl lg:text-3xl font-bold text-gray-800">Selamat datang di DonasiKita</h1>
+            <h1 class="text-2xl lg:text-3xl font-bold text-gray-800">
+        <?php if (logged_in()) : ?>
+            Selamat datang <span class="underline"><?= user()->username ?></span> di Admin - DonasiKita
+        <?php else : ?>
+            Selamat datang di Admin - DonasiKita
+        <?php endif; ?>
+    </h1>
                 <?php if (logged_in()) : ?>
-                <a href="/logout" class="px-2 inline-flex leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Logout</a>
+                    
+                <a href="/logout" class="px-2 inline-flex leading-5 font-semibold rounded-full text-blue-800 text-center items-center justify-center hover:no-underline hover:text-blue-500"><i class="fa-solid fa-right-from-bracket me-1"></i> Logout</a>
                 <?php else : ?>
-                <a href="/login" class="px-2 inline-flex leading-5 font-semibold rounded-full bg-green-100 text-green-800">Login</a>
+                <a href="/login" class="px-2 inline-flex leading-5 font-semibold rounded-full text-green-800 text-center items-center justify-center hover:no-underline hover:text-green-500"><i class="fa-solid fa-right-to-bracket me-1"></i> Login</a>
                 <?php endif; ?>
             </div>
 
