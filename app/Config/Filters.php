@@ -34,6 +34,9 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'login'      => \Myth\Auth\Filters\LoginFilter::class,
+        'role'       => \Myth\Auth\Filters\RoleFilter::class,
+        'permission' => \Myth\Auth\Filters\PermissionFilter::class,
     ];
 
     /**
@@ -49,17 +52,17 @@ class Filters extends BaseFilters
      *
      * @var array{before: list<string>, after: list<string>}
      */
-    public array $required = [
-        'before' => [
-            'forcehttps', // Force Global Secure Requests
-            'pagecache',  // Web Page Caching
-        ],
-        'after' => [
-            'pagecache',   // Web Page Caching
-            'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
-        ],
-    ];
+    //public array $required = [
+      //  'before' => [
+        //    'forcehttps', // Force Global Secure Requests
+          //  'pagecache',  // Web Page Caching
+        //],
+        //'after' => [
+          //  'pagecache',   // Web Page Caching
+            //'performance', // Performance Metrics
+            //'toolbar',     // Debug Toolbar
+        //],
+    //];
 
     /**
      * List of filter aliases that are always
@@ -69,12 +72,16 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
+            'honeypot',
+            'login'
             // 'csrf',
             // 'invalidchars',
         ],
         'after' => [
-            // 'honeypot',
+            //'toolbar'
+            //'honeypot',
+            //'dashboard'
+        
             // 'secureheaders',
         ],
     ];
@@ -103,5 +110,8 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'login' => ['before' =>['dashboar/*']]
+
+    ];
 }
