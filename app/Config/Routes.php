@@ -28,7 +28,7 @@ $routes->group('', ['namespace' => 'Myth\Auth\Controllers'], static function ($r
 $routes->get('/', function() {
    return redirect()->to(base_url('dashboard'));
 });
-$routes->get('dashboard', 'Dashboard::index');
+$routes->get('/dashboard', 'Dashboard::index', ['filter' => 'login']);
 $routes->get('/dashboard/program', 'Dashboard::program');
 $routes->get('/dashboard/tambah-program', 'Dashboard::tambah_program');
 $routes->post('/dashboard/program/add', 'Dashboard::add_program');

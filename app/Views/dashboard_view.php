@@ -4,8 +4,13 @@
     <div class="w-full p-4 lg:p-8 transition-all duration-300">
         <div class="container mx-auto">
             <!-- Welcome Message -->
-            <div class="bg-white rounded-lg shadow p-4 lg:p-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-4 lg:p-6 mb-6 flex justify-between items-center">
                 <h1 class="text-2xl lg:text-3xl font-bold text-gray-800">Selamat datang di DonasiKita</h1>
+                <?php if (logged_in()) : ?>
+                <a href="/logout" class="px-2 inline-flex leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Logout</a>
+                <?php else : ?>
+                <a href="/login" class="px-2 inline-flex leading-5 font-semibold rounded-full bg-green-100 text-green-800">Login</a>
+                <?php endif; ?>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
