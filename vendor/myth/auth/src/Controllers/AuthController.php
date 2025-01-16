@@ -63,48 +63,47 @@ class AuthController extends Controller
      * through a POST request.
      */
     public function attemptLogin()
-    {
-        $rules = [
-            'login'    => 'required',
-            'password' => 'required',
-        ];
-        if ($this->config->validFields === ['email']) {
-            $rules['login'] .= '|valid_email';
-        }
-
-        if (! $this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        $login    = $this->request->getPost('login');
-        $password = $this->request->getPost('password');
-        $remember = (bool) $this->request->getPost('remember');
-
-        // Determine credential type
-        $type = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        if ($this->auth->attempt([$type => $login, 'password' => $password], $remember)) {
-            // Login berhasil
-            if ($this->auth->user()->force_pass_reset === true) {
-                return redirect()->to(route_to('reset-password') . '?token=' . $this->auth->user()->reset_hash)->withCookies();
-            }
-            
-            return redirect()->to('dashboard')->withCookies();
-        } 
-        
-        // Login gagal
-        return redirect()->back()->withInput()->with('error', $this->auth->error() ?? lang('Auth.badAttempt'));
-
-        // Is the user being forced to reset their password?
-        if ($this->auth->user()->force_pass_reset === true) {
-            return redirect()->to(route_to('reset-password') . '?token=' . $this->auth->user()->reset_hash)->withCookies();
-        }
-
-        $redirectURL = session('redirect_url') ?? site_url('/');
-        unset($_SESSION['redirect_url']);
-
-        return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.loginSuccess'));
+{
+    $rules = [
+        'login'    => 'required',
+        'password' => 'required',
+    ];
+    if ($this->config->validFields === ['email']) {
+        $rules['login'] .= '|valid_email';
     }
+
+    if (! $this->validate($rules)) {
+        return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+    }
+
+    $login    = $this->request->getPost('login');
+    $password = $this->request->getPost('password');
+    $remember = (bool) $this->request->getPost('remember');
+
+    // Determine credential type
+    $type = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+    // Cek apakah login berhasil
+    if ($this->auth->attempt([$type => $login, 'password' => $password], $remember)) {
+        // Tambahkan pengecekan status aktivasi
+        $user = $this->auth->user();
+        if (!$user->active) {
+            $this->auth->logout(); // Logout jika belum aktif
+            return redirect()->back()->withInput()->with('error', lang('Auth.notActivated'));
+        }
+
+        // Jika sudah aktif, lanjutkan proses login normal
+        if ($user->force_pass_reset === true) {
+            return redirect()->to(route_to('reset-password') . '?token=' . $user->reset_hash)->withCookies();
+        }
+
+        // Gunakan route_to() untuk redirect ke dashboard
+        return redirect()->to(route_to('dashboard'))->withCookies()->with('message', lang('Auth.loginSuccess'));
+    }
+
+    // Login gagal
+    return redirect()->back()->withInput()->with('error', $this->auth->error() ?? lang('Auth.badAttempt'));
+}
 
     /**
      * Log the user out.

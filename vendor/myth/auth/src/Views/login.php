@@ -5,7 +5,8 @@
     <div class="max-w-md w-full space-y-8">
         <div class="text-center">
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-                <?=lang('Auth.loginTitle')?>
+                <!--<?=lang('Auth.loginTitle')?>-->
+                Login - DonasiKita
             </h2>
         </div>
         <div class="bg-white p-8 rounded-lg shadow-md">
