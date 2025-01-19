@@ -5,18 +5,22 @@
         <div class="container mx-auto">
             <!-- Welcome Message -->
             <div class="bg-white rounded-lg shadow p-4 lg:p-6 mb-6 flex justify-between items-center">
-            <h1 class="text-2xl lg:text-3xl font-bold text-gray-800">
-        <?php if (logged_in()) : ?>
-            Selamat datang <span class="underline"><?= user()->username ?></span> di Admin - DonasiKita
-        <?php else : ?>
-            Selamat datang di Admin - DonasiKita
-        <?php endif; ?>
-    </h1>
-                <?php if (logged_in()) : ?>
-                    
-                <a href="/logout" class="px-2 inline-flex leading-5 font-semibold rounded-full text-blue-800 text-center items-center justify-center hover:no-underline hover:text-blue-500"><i class="fa-solid fa-right-from-bracket me-1"></i> Logout</a>
-                <?php else : ?>
-                <a href="/login" class="px-2 inline-flex leading-5 font-semibold rounded-full text-green-800 text-center items-center justify-center hover:no-underline hover:text-green-500"><i class="fa-solid fa-right-to-bracket me-1"></i> Login</a>
+                <h1 class="text-2xl lg:text-3xl font-bold text-gray-800">
+                    <?php if (logged_in()): ?>
+                        Selamat datang <span class="underline"><?= user()->username ?></span> di Admin - DonasiKita
+                    <?php else: ?>
+                        Selamat datang di Admin - DonasiKita
+                    <?php endif; ?>
+                </h1>
+                <?php if (logged_in()): ?>
+
+                    <a href="/logout"
+                        class="px-2 inline-flex leading-5 font-semibold rounded-full text-blue-800 text-center items-center justify-center hover:no-underline hover:text-blue-500"><i
+                            class="fa-solid fa-right-from-bracket me-1"></i> Logout</a>
+                <?php else: ?>
+                    <a href="/login"
+                        class="px-2 inline-flex leading-5 font-semibold rounded-full text-green-800 text-center items-center justify-center hover:no-underline hover:text-green-500"><i
+                            class="fa-solid fa-right-to-bracket me-1"></i> Login</a>
                 <?php endif; ?>
             </div>
 
@@ -51,34 +55,34 @@
                 </div>
 
                 <!-- Program Aktif Card -->
-                    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
-                        <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-yellow-500 bg-opacity-75">
-                                <i class="fas fa-chart-line text-white text-xl lg:text-2xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-gray-600 text-sm">Program Aktif</h2>
-                                <p class="text-lg lg:text-2xl font-semibold text-gray-800">
-                                    <?= number_format($total_program, 0, ',', '.') ?>
-                                </p>
-                            </div>
+                <div class="bg-white rounded-lg shadow p-4 lg:p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-yellow-500 bg-opacity-75">
+                            <i class="fas fa-chart-line text-white text-xl lg:text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h2 class="text-gray-600 text-sm">Program Aktif</h2>
+                            <p class="text-lg lg:text-2xl font-semibold text-gray-800">
+                                <?= number_format($total_program, 0, ',', '.') ?>
+                            </p>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Penyaluran Card -->
-                    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
-                        <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-red-500 bg-opacity-75">
-                                <i class="fas fa-hand-holding-heart text-white text-xl lg:text-2xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-gray-600 text-sm">Total Penyaluran</h2>
-                                <p class="text-lg lg:text-2xl font-semibold text-gray-800">
-                                    Rp <?= number_format($total_penyaluran, 0, ',', '.') ?>
-                                </p>
-                            </div>
+                <!-- Penyaluran Card -->
+                <div class="bg-white rounded-lg shadow p-4 lg:p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-red-500 bg-opacity-75">
+                            <i class="fas fa-hand-holding-heart text-white text-xl lg:text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h2 class="text-gray-600 text-sm">Total Penyaluran</h2>
+                            <p class="text-lg lg:text-2xl font-semibold text-gray-800">
+                                Rp <?= number_format($total_penyaluran, 0, ',', '.') ?>
+                            </p>
                         </div>
                     </div>
+                </div>
             </div>
 
             <!-- Recent Donations Table -->
@@ -107,6 +111,7 @@
                                     Status</th>
                             </tr>
                         </thead>
+
                         <?php if (session()->getFlashdata('success')): ?>
                             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
                                 <?= session()->getFlashdata('success') ?>
@@ -152,9 +157,17 @@
                                                 </span>
                                             <?php endif; ?>
                                             <a href="<?= base_url('dashboard/donasi/view/' . $donasi['no_donasi']) ?>"
-                                                class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                                                class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 hover:no-underline transition-colors">
                                                 View
                                             </a>
+                                            <form action="<?= base_url('dashboard/donasi/hapus/' . $donasi['no_donasi']) ?>"
+                                                method="post" class="inline"
+                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus donasi ini?');">
+                                                <button type="submit"
+                                                    class="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+                                                    Hapus
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -163,42 +176,42 @@
                     </table>
                 </div>
                 <div class="p-4 border-t border-gray-200">
-        <?php
-        $total_pages = ceil($pager['total_records'] / $pager['per_page']);
-        $current_page = $pager['current_page'];
-        ?>
-        
-        <div class="flex items-center justify-between">
-            <div class="text-sm text-gray-500">
-                Showing <?= (($current_page - 1) * 5) + 1 ?> to 
-                <?= min($current_page * 5, $pager['total_records']) ?> of 
-                <?= $pager['total_records'] ?> entries
-            </div>
-            
-            <div class="flex space-x-1">
-                <?php if ($current_page > 1): ?>
-                    <a href="<?= base_url('dashboard?page=' . ($current_page - 1)) ?>"
-                       class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
-                        Previous
-                    </a>
-                <?php endif; ?>
-                
-                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="<?= base_url('dashboard?page=' . $i) ?>"
-                       class="px-3 py-1 text-sm <?= $i == $current_page ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?> rounded-md">
-                        <?= $i ?>
-                    </a>
-                <?php endfor; ?>
-                
-                <?php if ($current_page < $total_pages): ?>
-                    <a href="<?= base_url('dashboard?page=' . ($current_page + 1)) ?>"
-                       class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
-                        Next
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
+                    <?php
+                    $total_pages = ceil($pager['total_records'] / $pager['per_page']);
+                    $current_page = $pager['current_page'];
+                    ?>
+
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            Showing <?= (($current_page - 1) * 5) + 1 ?> to
+                            <?= min($current_page * 5, $pager['total_records']) ?> of
+                            <?= $pager['total_records'] ?> entries
+                        </div>
+
+                        <div class="flex space-x-1">
+                            <?php if ($current_page > 1): ?>
+                                <a href="<?= base_url('dashboard?page=' . ($current_page - 1)) ?>"
+                                    class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                                    Previous
+                                </a>
+                            <?php endif; ?>
+
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <a href="<?= base_url('dashboard?page=' . $i) ?>"
+                                    class="px-3 py-1 text-sm <?= $i == $current_page ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?> rounded-md">
+                                    <?= $i ?>
+                                </a>
+                            <?php endfor; ?>
+
+                            <?php if ($current_page < $total_pages): ?>
+                                <a href="<?= base_url('dashboard?page=' . ($current_page + 1)) ?>"
+                                    class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                                    Next
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@ class ModelProgram extends Model
 {
     protected $table = 'tb_program';
     protected $primaryKey = 'id_program';
-    protected $allowedFields = ['nama_program', 'deskripsi', 'target', 'terkumpul', 'status'];
+    protected $allowedFields = ['nama_program', 'deskripsi', 'target', 'terkumpul', 'status', 'tgl_mulai', 'tgl_selesai'];
 
     // Method yang sudah ada
     public function getProgram()
@@ -45,7 +45,11 @@ class ModelProgram extends Model
             ->total ?? 0;
     }
     public function updateStatus($id)
-    {
-        return $this->update($id, ['status' => 0]);
-    }
+{
+    return $this->update($id, [
+        'status' => 0,
+        'tgl_selesai' => date('Y-m-d') // Menambahkan tanggal selesai saat ini
+    ]);
+}
+    
 }

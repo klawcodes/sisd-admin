@@ -50,6 +50,7 @@
                     </div>
                     <h4 class="text-lg font-semibold text-gray-800 mb-2"><?= esc($program['nama_program']) ?></h4>
                     <p class="text-gray-600 text-sm mb-3"><?= esc($program['deskripsi']) ?></p>
+                    <p class="text-gray-600 text-sm mb-3">Dibuat: <?= esc($program['tgl_mulai']) ?></p>
 
                     <!-- Progress Section -->
                     <div class="mb-4">

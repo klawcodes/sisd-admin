@@ -67,7 +67,8 @@ class Dashboard extends BaseController
             'deskripsi' => $this->request->getPost('deskripsi'),
             'target' => $this->request->getPost('target'),
             'terkumpul' => 0, // nilai awal
-            'status' => $this->request->getPost('status')
+            'status' => $this->request->getPost('status'),
+            'tgl_mulai' => $this->request->getPost('tgl_mulai')
         ];
 
         $this->programModel->saveProgram($data);
@@ -191,16 +192,16 @@ class Dashboard extends BaseController
             ->with('error', 'Gagal mengupdate status donasi');
     }
     public function update_program_status($id)
-    {
-        $program = $this->programModel->find($id);
+{
+    $program = $this->programModel->find($id);
 
-        if ($program) {
-            $this->programModel->updateStatus($id);
-            return redirect()->to(base_url('/dashboard/program'))
-                ->with('success', 'Status program berhasil diupdate');
-        }
-
+    if ($program) {
+        $this->programModel->updateStatus($id);
         return redirect()->to(base_url('/dashboard/program'))
-            ->with('error', 'Program tidak ditemukan');
+            ->with('success', 'Program telah diselesaikan pada tanggal ' . date('d/m/Y'));
     }
+
+    return redirect()->to(base_url('/dashboard/program'))
+        ->with('error', 'Program tidak ditemukan');
+}
 }

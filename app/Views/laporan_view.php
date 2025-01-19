@@ -10,6 +10,8 @@
                     <th class="px-4 py-2 text-left">Nama Program</th>
                     <th class="px-4 py-2 text-left">Deskripsi</th>
                     <th class="px-4 py-2 text-left">Jumlah Nominal</th>
+                    <th class="px-4 py-2 text-left">Tanggal Mulai</th>
+                    <th class="px-4 py-2 text-left">Tanggal Selesai</th>
                     <th class="px-4 py-2 text-left">Status</th>
                     <th class="px-4 py-2 text-left"></th>
                 </tr>
@@ -21,6 +23,8 @@
                     <td class="px-4 py-2"><?= $program['nama_program'] ?></td>
                     <td class="px-4 py-2"><?= $program['deskripsi'] ?></td>
                     <td class="px-4 py-2">Rp <?= number_format($program['terkumpul'], 0, ',', '.') ?></td>
+                    <td class="px-4 py-2"><?= $program['tgl_mulai'] ?></td>
+                    <td class="px-4 py-2"><?= $program['tgl_selesai'] ?></td>
                     <td class="px-4 py-2">
                         <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
                             Selesai

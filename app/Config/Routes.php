@@ -36,6 +36,8 @@ $routes->get('/dashboard/hapus-program/(:num)', 'Dashboard::hapus_program/$1');
 $routes->get('/dashboard/update-status/(:num)', 'Dashboard::update_status/$1');
 $routes->get('dashboard/donasi/view/(:num)', 'Dashboard::view_donasi/$1');
 $routes->post('dashboard/update-status-donasi', 'Dashboard::update_status_donasi');
+$routes->post('dashboard/donasi/hapus/(:num)', 'Dashboard::hapus_donasi/$1');
 $routes->get('/dashboard/update-program-status/(:num)', 'Dashboard::update_program_status/$1');
 
 $routes->get('/dashboard/laporan', 'Dashboard::laporan');
+
